@@ -1,0 +1,6 @@
+*.env
+personal/
+node_modules/
+dist/
+.vscode/
+data/

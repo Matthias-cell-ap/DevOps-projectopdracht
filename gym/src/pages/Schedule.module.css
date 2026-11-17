@@ -1,0 +1,116 @@
+.section { padding: 14px 16px; }
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.dayRow {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dayRow.today {
+  border-color: var(--blue);
+  background: var(--blue-dim);
+}
+
+.dayName {
+  font-weight: 700;
+  font-size: 13px;
+  width: 34px;
+  flex-shrink: 0;
+}
+
+.dayLabel {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 99px;
+  text-transform: capitalize;
+}
+
+.gym    { background: var(--blue-dim);   color: var(--blue); border: 1px solid var(--blue); }
+.sport,
+.karate { background: #2d1b6944;         color: #a78bfa;     border: 1px solid #7c3aed; }
+.rest   { background: var(--surface2);   color: var(--text-dim); border: 1px solid var(--border); }
+.other  { background: var(--amber-dim);  color: var(--amber); border: 1px solid var(--amber); }
+
+.editBtn {
+  font-size: 11px;
+  color: var(--blue);
+  background: none;
+  border: none;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.select, .input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 13px;
+  padding: 7px 10px;
+  outline: none;
+  font-family: inherit;
+}
+
+.select:focus, .input:focus { border-color: var(--blue); }
+
+.editorBtns { display: flex; gap: 6px; }
+
+.sessionTag {
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.saveBtn {
+  flex: 1;
+  padding: 8px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.cancelBtn {
+  flex: 1;
+  padding: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 8px;
+  font-size: 13px;
+}

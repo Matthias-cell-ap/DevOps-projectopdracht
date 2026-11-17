@@ -1,0 +1,774 @@
+.typeScroll {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.typeScroll::-webkit-scrollbar { display: none; }
+
+.typeBtn {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.typeBtn.active {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+
+.newTypeForm {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.newTypeForm .input { flex: 1; }
+.newTypeForm .saveBtn { width: auto; padding: 9px 18px; }
+
+.emptyState {
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.emptyHint {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.manageBtn {
+  margin-left: auto;
+  padding: 5px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-muted);
+}
+.manageActive {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+
+.managePanel {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.manageRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  /* transform is deliberately NOT transitioned here — the held row must track the finger 1:1 */
+  transition: box-shadow 0.15s, border-color 0.15s, background 0.15s;
+}
+.dragHint {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 2px;
+}
+.dragHandle {
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text-dim);
+  padding: 8px 8px 8px 2px;   /* bigger touch target than the glyph itself */
+  margin: -8px 0 -8px -2px;
+  cursor: grab;
+  touch-action: none;         /* lets a finger drag instead of scrolling the page */
+  user-select: none;
+  -webkit-user-select: none;
+  transition: color 0.15s;
+}
+.dragHandle:active { cursor: grabbing; }
+
+/* The row being held: lifted with a soft shadow, follows the finger (transform set in JS) */
+.dragging {
+  position: relative;
+  z-index: 3;
+  border-color: var(--blue);
+  background: var(--surface2);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+  cursor: grabbing;
+  will-change: transform;
+}
+.dragging .dragHandle { color: var(--blue); }
+
+.carryInfo {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.carryList {
+  margin: 6px 0 8px 18px;
+  color: var(--text);
+}
+.freshBtn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.editFields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.editLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-top: 4px;
+}
+.editNote { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+.editError { font-size: 12px; color: var(--red); font-weight: 600; }
+
+.manageName { flex: 1; font-size: 13px; font-weight: 600; }
+.manageMuscle { font-size: 11px; color: var(--text-dim); }
+.moveBtn {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.moveBtn:disabled { opacity: 0.3; }
+.removeBtn {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--red);
+  background: var(--red-dim);
+  color: var(--red);
+  font-size: 15px;
+  font-weight: 700;
+}
+.addExBtn {
+  margin-top: 6px;
+  padding: 11px;
+  border-radius: 10px;
+  border: 1px dashed var(--blue);
+  background: var(--blue-dim);
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 700;
+}
+.deleteTypeBtn {
+  margin-top: 2px;
+  padding: 9px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Library picker */
+.pickerCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pickerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.closeX {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 15px;
+  padding: 2px 6px;
+}
+.muscleScroll {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.muscleScroll::-webkit-scrollbar { display: none; }
+.muscleChip {
+  flex-shrink: 0;
+  padding: 4px 11px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.muscleActive {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+.pickerList {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 120px;
+}
+.pickerGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pickerGroup + .pickerGroup { margin-top: 8px; }
+.pickerGroupHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface);
+  padding: 4px 2px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pickerRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  text-align: left;
+}
+.pickerAdded {
+  border-color: var(--green);
+  background: var(--green-dim);
+}
+.pickerName { flex: 1; font-size: 13px; font-weight: 600; color: var(--text); }
+.pickerMuscle { font-size: 10px; color: var(--text-dim); }
+.pickerMark { font-size: 14px; font-weight: 700; color: var(--blue); }
+.pickerAdded .pickerMark { color: var(--green); }
+
+.customForm {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  flex-shrink: 0;
+}
+.customToggle {
+  font-size: 12px;
+  color: var(--blue);
+  background: none;
+  border: none;
+  font-weight: 600;
+  padding: 6px 0 0;
+  flex-shrink: 0;
+}
+
+.dateBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.dateLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-muted);
+}
+.dateInput {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 9px;
+  outline: none;
+  font-family: inherit;
+  color-scheme: dark;
+}
+.dateInput:focus { border-color: var(--blue); }
+.backdateTag {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--amber);
+  background: var(--amber-dim);
+  border: 1px solid var(--amber);
+  border-radius: 99px;
+  padding: 2px 8px;
+}
+
+.estRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+.estBest { color: var(--green); font-weight: 600; }
+.estLast { color: var(--text-muted); font-weight: 600; }
+
+/* Toasts shown directly above the Save button */
+.saveRow .savedToast,
+.saveRow .prToast { margin: 0 0 8px; }
+
+.suggestRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px dashed var(--blue);
+  background: var(--blue-dim);
+  text-align: left;
+}
+.suggestLabel { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.suggestVal { font-size: 14px; font-weight: 700; color: var(--blue); }
+.suggestHint { margin-left: auto; font-size: 10px; color: var(--text-dim); }
+
+.stallWarn {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--amber);
+  background: var(--amber-dim);
+  border: 1px solid var(--amber);
+  border-radius: 8px;
+  padding: 7px 10px;
+}
+
+.savedToast {
+  margin: 10px 16px 0;
+  background: var(--green-dim);
+  border: 1px solid var(--green);
+  color: var(--green);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sessionList {
+  margin-top: 14px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sessionRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.sessionNote {
+  flex-basis: 100%;
+  margin-top: -4px;
+  font-size: 11px;
+  color: var(--amber);
+}
+.prTag {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 99px;
+  background: var(--green-dim);
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.chartNote { font-size: 10px; color: var(--text-dim); text-align: right; margin-top: 2px; }
+.lastNote { margin-top: 2px; font-size: 11px; color: var(--amber); }
+
+.goalChipBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.sessionNoteInput {
+  width: 100%;
+  margin-bottom: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 13px;
+  padding: 9px 10px;
+  outline: none;
+  font-family: inherit;
+}
+.sessionNoteInput:focus { border-color: var(--blue); }
+
+.deleteOneBtn,
+.deleteAllBtn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--red);
+  background: var(--red-dim);
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+}
+.deleteList {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.sessionDate { color: var(--text-muted); flex: 1; }
+.sessionVal { font-weight: 700; }
+.sessionEst { color: var(--text-dim); font-size: 11px; }
+.sessionDel {
+  font-size: 11px;
+  color: var(--red);
+  background: var(--red-dim);
+  border: 1px solid var(--red);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-weight: 600;
+}
+
+.addBtn {
+  font-size: 13px;
+  color: var(--blue);
+  background: none;
+  border: none;
+  font-weight: 600;
+}
+
+.addForm {
+  padding: 12px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 14px;
+  padding: 8px 10px;
+  outline: none;
+  font-family: inherit;
+}
+
+.input:focus { border-color: var(--blue); }
+
+.saveBtn {
+  padding: 9px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.prToast {
+  margin: 10px 16px 0;
+  background: var(--green-dim);
+  border: 1px solid var(--green);
+  color: var(--green);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.section {
+  padding: 12px 16px;
+}
+
+.empty {
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 8px 0;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cardRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.exName { font-weight: 700; font-size: 15px; }
+.exMeta { font-size: 12px; color: var(--text-muted); }
+
+.lastRow {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.up   { color: var(--green); font-weight: 600; }
+.down { color: var(--red);   font-weight: 600; }
+.same { color: var(--text-dim); }
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+
+.setInput {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 700;
+  width: 70px;
+  outline: none;
+  font-family: inherit;
+}
+
+.x { color: var(--text-muted); font-size: 14px; }
+
+.histBtn {
+  font-size: 11px;
+  color: var(--blue);
+  background: none;
+  border: none;
+  font-weight: 600;
+}
+
+.goalToggle {
+  font-size: 11px;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  text-align: left;
+}
+
+.goalEditor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.goalInput {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  padding: 5px 8px;
+  width: 80px;
+  outline: none;
+  font-family: inherit;
+}
+
+.goalSave {
+  padding: 5px 10px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.goalCancel {
+  padding: 5px 10px;
+  background: var(--surface2);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.saveRow {
+  padding: 0 16px 16px;
+}
+
+.saveSessionBtn {
+  width: 100%;
+  padding: 12px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.saveSessionBtn:disabled { opacity: 0.6; }
+
+/* History modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modalCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.modalTitle {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 14px;
+}
+
+.closeBtn {
+  margin-top: 14px;
+  width: 100%;
+  padding: 9px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* Exercise-only note (e.g. "form upgrade") — marked on the history graph */
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+.exNoteInput {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 12px;
+  padding: 7px 10px;
+  outline: none;
+  font-family: inherit;
+}
+.exNoteInput:focus { border-color: var(--amber); }
+.lastExNote { margin-top: 2px; font-size: 11px; color: var(--blue); }
+.sessionExNote {
+  flex-basis: 100%;
+  margin-top: -4px;
+  font-size: 11px;
+  color: var(--blue);
+}
+.markerList {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.markerDash { color: var(--amber); font-weight: 700; }
+
+.sessionEdit {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-weight: 600;
+}
+
+/* Inline editor for correcting a logged set */
+.editSetBox {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--blue);
+  border-radius: 8px;
+  background: var(--surface2);
+}
+.editSetRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.editSetRow .goalInput { width: 64px; }

@@ -1,0 +1,32 @@
+storage:
+  type: sqlite
+  path: /data/data.db
+
+endpoints:
+  - name: memos
+    url: "http://memos:5230"
+    interval: 10s
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 300"
+
+  - name: info
+    url: "http://info:80"
+    interval: 10s
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 300"
+
+  - name: schautrack
+    url: "http://schautrack:3000"
+    interval: 10s
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 300"
+
+  - name: gym
+    url: "http://gym:80"
+    interval: 10s
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 300"
