@@ -337,7 +337,7 @@ export default function Settings() {
               <div className={styles.toggleRow} style={{ marginTop: 0 }}>
                 <div>
                   <div className={styles.toggleLabel}>Next-set weight suggestions</div>
-                  <div className={styles.toggleHint}>Suggests your next top set from your last one. Calculated on your phone.</div>
+                  <div className={styles.toggleHint}>Suggests your next top set from your last one. Calculated in the app itself.</div>
                 </div>
                 <div
                   className={`${styles.toggle} ${form.weightSuggestions ? '' : styles.toggleOff}`}

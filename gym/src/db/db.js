@@ -1,6 +1,6 @@
 import Dexie from 'dexie'
 import { SEED_EXERCISES } from './seedExercises.js'
-import { today } from '../lib/utils.js'
+import { defaultSchedule, defaultProfile } from './defaults.js'
 
 export const db = new Dexie('GymApp')
 
@@ -125,9 +125,7 @@ db.version(5).stores({
 db.on('ready', async () => {
   const count = await db.schedule.count()
   if (count === 0) {
-    await db.schedule.bulkPut(
-      [0, 1, 2, 3, 4, 5, 6].map(day => ({ day, type: 'rest', label: 'Rest', sessionTypeId: null }))
-    )
+    await db.schedule.bulkPut(defaultSchedule())
   }
 
   const exerciseCount = await db.exercises.count()
@@ -137,20 +135,6 @@ db.on('ready', async () => {
 
   const profileCount = await db.profile.count()
   if (profileCount === 0) {
-    await db.profile.put({
-      id: 1,
-      injuries: '',
-      trainingContext: '',
-      dietaryNotes: '',
-      height: '',
-      age: '',
-      goalWeight: '',
-      experience: '',
-      phase: 'cut',
-      phaseStartDate: today(),
-      phaseHistory: [],
-      weightSuggestions: true,   // the gym tab's next-set suggestions are on for new users
-      theme: 'dark',
-    })
+    await db.profile.put(defaultProfile())
   }
 })

@@ -20,7 +20,14 @@ rest of the app keeps working.
 - **Unsaved form input** (drafts) is kept separately in localStorage under keys starting with
   `gymapp:draft:`, plus a copy in Capacitor Preferences on Android. That's temporary data and
   is **not** part of the database or the backup.
-- **Nothing is sent anywhere.** No accounts, no server, no analytics.
+- **The Android app sends nothing anywhere.** No accounts, no server, no analytics.
+
+### Server version
+
+`npm run build:server` builds the same app with `src/db/dal.api.js` in place of `dal.js`:
+the data then lives in PostgreSQL on your own server (`server/`, see `server/README.md`),
+one SQL table per table below, each row stored as JSONB. Backups use the same file format,
+so a backup exported on the phone can be restored on the server and the other way around.
 
 ## The backup file
 

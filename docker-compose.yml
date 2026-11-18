@@ -61,10 +61,43 @@ services:
     ports:
       - "80:80"
     restart: unless-stopped
-
+    depends_on:
+      gym-db:
+        condition: service_healthy
+    networks:
+      - default
+  
+  gym-api:
+    build: ./gym/server
+    env_file: gym.env
+    restart: unless-stopped
+    depends_on:
+      gym-db:
+        condition: service_healthy
+    networks:
+      - default 
+      - gym-db-internal
+  
+  gym-db:
+    image: postgres:18-alpine
+    env_file: gym.env
+    networks:
+      - gym-db-internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    volumes:
+      - gym-db-data:/var/lib/postgresql
+    restart: unless-stopped
 volumes:
   schautrack-db-data:
+  gym-db-data:
 
 networks:
   schautrack-db-internal:
+    internal: true
+  gym-db-internal:
     internal: true

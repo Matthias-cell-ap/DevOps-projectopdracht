@@ -157,7 +157,9 @@ export default function Dashboard() {
             </ol>
             <div className={styles.welcomeNote}>
               Tracked things in a notes app before? <button className={styles.welcomeLink} onClick={() => navigate('/data')}>Data</button> → Import from old notes.
-              Everything stays on this phone only — export a backup now and then (Data tab).
+              {import.meta.env.MODE === 'server'
+                ? 'Your data is stored on your own server.'
+                : 'Everything stays on this phone only — export a backup now and then (Data tab).'}
             </div>
             <button className={styles.welcomeBtn} onClick={() => updateProfile({ onboardingDone: true })}>Got it</button>
           </div>

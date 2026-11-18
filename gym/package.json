@@ -5,9 +5,12 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
+    "dev:server": "vite --mode server",
     "build": "vite build",
+    "build:server": "vite build --mode server",
     "preview": "vite preview",
-    "android": "npm run build && npx cap sync android && npx cap open android"
+    "android": "npm run build && npx cap sync android && npx cap open android",
+    "test": "node --test \"test/*.test.js\""
   },
   "keywords": [],
   "author": "",
@@ -15,6 +18,7 @@
   "type": "module",
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.2",
+    "fake-indexeddb": "^6.2.8",
     "vite": "^8.0.16"
   },
   "dependencies": {
