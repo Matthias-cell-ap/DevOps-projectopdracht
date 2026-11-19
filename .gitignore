@@ -6,3 +6,5 @@ dist/
 data/
 secrets/
 config/authelia/users_database.yml
+backups/
+backup-dumps/
