@@ -1,0 +1,7 @@
+services:
+  tunnel:
+    image: nginx:1.30.6-alpine
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
