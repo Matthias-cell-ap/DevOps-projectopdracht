@@ -4,3 +4,5 @@ node_modules/
 dist/
 .vscode/
 data/
+secrets/
+config/authelia/users_database.yml

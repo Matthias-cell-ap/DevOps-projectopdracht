@@ -2,14 +2,17 @@ services:
   memos:
     image: neosmemo/memos:26.11.1
     restart: unless-stopped
-    ports:
-      - "5230:5230"
     volumes:
       - ./data/memos:/var/opt/memos
     environment:
       MEMOS_PORT: 5230
       MEMOS_DRIVER: sqlite
       MEMOS_INSTANCE_URL: http://localhost:5230
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.notes.rule=Host(`notes.matthias-gym-app.duckdns.org`)
+      - traefik.http.routers.notes.entrypoints=websecure
+      - traefik.http.services.notes.loadbalancer.server.port=5230
 
   info:
     image: nginx:1.30.6-alpine
@@ -25,17 +28,18 @@ services:
   gatus:
     image: twinproduction/gatus:v5.38.0
     restart: unless-stopped
-    ports:
-      - "8080:8080"
     volumes:
       - ./config/gatus:/config:ro
       - ./data/gatus:/data/
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.status.rule=Host(`status.matthias-gym-app.duckdns.org`)
+      - traefik.http.routers.status.entrypoints=websecure
+      - traefik.http.services.status.loadbalancer.server.port=8080
 
   schautrack:
     image: ghcr.io/schaurian/schautrack:2.9.1
     env_file: schautrack.env
-    ports:
-      - "3000:3000"
     depends_on:
       schautrack-db:
         condition: service_healthy
@@ -43,6 +47,11 @@ services:
       - default 
       - schautrack-db-internal
     restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.food.rule=Host(`food.matthias-gym-app.duckdns.org`)
+      - traefik.http.routers.food.entrypoints=websecure
+      - traefik.http.services.food.loadbalancer.server.port=3000
 
   schautrack-db:
     image: postgres:18-alpine
@@ -61,14 +70,17 @@ services:
   
   gym:
     build: ./gym
-    ports:
-      - "8081:8081"
     restart: unless-stopped
     depends_on:
       gym-db:
         condition: service_healthy
     networks:
       - default
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.gym.rule=Host(`gym.matthias-gym-app.duckdns.org`)
+      - traefik.http.routers.gym.entrypoints=websecure
+      - traefik.http.services.gym.loadbalancer.server.port=80
   
   gym-api:
     build: ./gym/server
@@ -110,13 +122,28 @@ services:
       - ./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik-certs:/letsencrypt
-  
-  whoami:
-    image: traefik/whoami
+
+  authelia:
+    image: authelia/authelia:4.39.28
+    restart: unless-stopped
+    environment:
+      X_AUTHELIA_CONFIG_FILTERS: template
+      AUTHELIA_SESSION_SECRET_FILE: /secrets/session_secret
+      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /secrets/storage_encryption_key
+      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: /secrets/jwt_secret
+      #AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE: /secrets/oidc_hmac_secret
+    volumes:
+      - ./config/authelia:/config
+      - ./secrets/authelia:/secrets:ro
+      - ./data/authelia:/data
     labels:
       - traefik.enable=true
-      - traefik.http.routers.whoami.rule=Host(`whoami.matthias-gym-app.duckdns.org`)
-      - traefik.http.routers.whoami.entrypoints=websecure
+      - traefik.http.routers.authelia.rule=Host(`auth.matthias-gym-app.duckdns.org`)
+      - traefik.http.routers.authelia.entrypoints=websecure
+      - traefik.http.services.authelia.loadbalancer.server.port=9091
+      - traefik.http.middlewares.authelia.forwardAuth.address=http://authelia:9091/api/authz/forward-auth
+      - traefik.http.middlewares.authelia.forwardAuth.trustForwardHeader=true
+      - traefik.http.middlewares.authelia.forwardAuth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Email,Remote-Name
 
 volumes:
   schautrack-db-data:

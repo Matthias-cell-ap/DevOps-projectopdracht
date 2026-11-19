@@ -1,0 +1,29 @@
+server:
+  address: 'tcp://:9091'
+
+log:
+  level: info
+
+authentication_backend:
+  file:
+    path: /config/users_database.yml
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain: '*.matthias-gym-app.duckdns.org'
+      policy: one_factor
+
+session:
+  cookies:
+    - domain: 'matthias-gym-app.duckdns.org'
+      authelia_url: 'https://auth.matthias-gym-app.duckdns.org'
+      default_redirection_url: 'https://info.matthias-gym-app.duckdns.org'
+
+storage:
+  local:
+    path: /data/db.sqlite3
+
+notifier:
+  filesystem:
+    filename: /data/notification.txt

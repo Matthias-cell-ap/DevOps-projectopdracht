@@ -23,8 +23,6 @@ certificatesResolvers:
   duckdns:
     acme:
       storage: /letsencrypt/acme.json
-      # Testserver van Let's Encrypt; deze regel haal je weg in 5.5
-      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
       dnsChallenge:
         provider: duckdns
         resolvers:
