@@ -1,0 +1,37 @@
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections: 
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        certResolver: duckdns
+        domains:
+          - main: "*.matthias-gym-app.duckdns.org"
+
+providers:
+  docker:
+    exposedByDefault: false
+    network: projectopdracht_default
+
+certificatesResolvers:
+  duckdns:
+    acme:
+      storage: /letsencrypt/acme.json
+      # Testserver van Let's Encrypt; deze regel haal je weg in 5.5
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      dnsChallenge:
+        provider: duckdns
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"
+        propagation:
+          delayBeforeChecks: 30s
+
+log:
+  level: INFO

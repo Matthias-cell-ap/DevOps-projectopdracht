@@ -14,8 +14,11 @@ services:
   info:
     image: nginx:1.30.6-alpine
     restart: unless-stopped
-    ports:
-      - "8081:80"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.info.rule=Host(`info.matthias-gym-app.duckdns.org`)
+      - traefik.http.routers.info.entrypoints=websecure
+      - traefik.http.services.info.loadbalancer.server.port=80
     volumes:
       - ./info:/usr/share/nginx/html:ro
 
@@ -59,7 +62,7 @@ services:
   gym:
     build: ./gym
     ports:
-      - "80:80"
+      - "8081:8081"
     restart: unless-stopped
     depends_on:
       gym-db:
@@ -92,9 +95,33 @@ services:
     volumes:
       - gym-db-data:/var/lib/postgresql
     restart: unless-stopped
+
+  traefik:
+    image: traefik:v3.7.16
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    env_file: traefik.env
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    volumes:
+      - ./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-certs:/letsencrypt
+  
+  whoami:
+    image: traefik/whoami
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.whoami.rule=Host(`whoami.matthias-gym-app.duckdns.org`)
+      - traefik.http.routers.whoami.entrypoints=websecure
+
 volumes:
   schautrack-db-data:
   gym-db-data:
+  traefik-certs:
 
 networks:
   schautrack-db-internal:
