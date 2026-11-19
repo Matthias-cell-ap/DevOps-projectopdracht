@@ -13,6 +13,8 @@ services:
       - traefik.http.routers.notes.rule=Host(`notes.matthias-gym-app.duckdns.org`)
       - traefik.http.routers.notes.entrypoints=websecure
       - traefik.http.services.notes.loadbalancer.server.port=5230
+      - traefik.http.routers.notes.middlewares=authelia@docker
+
 
   info:
     image: nginx:1.30.6-alpine
@@ -36,6 +38,8 @@ services:
       - traefik.http.routers.status.rule=Host(`status.matthias-gym-app.duckdns.org`)
       - traefik.http.routers.status.entrypoints=websecure
       - traefik.http.services.status.loadbalancer.server.port=8080
+      - traefik.http.routers.status.middlewares=authelia@docker
+
 
   schautrack:
     image: ghcr.io/schaurian/schautrack:2.9.1
@@ -52,6 +56,8 @@ services:
       - traefik.http.routers.food.rule=Host(`food.matthias-gym-app.duckdns.org`)
       - traefik.http.routers.food.entrypoints=websecure
       - traefik.http.services.food.loadbalancer.server.port=3000
+      - traefik.http.routers.food.middlewares=authelia@docker
+
 
   schautrack-db:
     image: postgres:18-alpine
@@ -81,6 +87,8 @@ services:
       - traefik.http.routers.gym.rule=Host(`gym.matthias-gym-app.duckdns.org`)
       - traefik.http.routers.gym.entrypoints=websecure
       - traefik.http.services.gym.loadbalancer.server.port=80
+      - traefik.http.routers.gym.middlewares=authelia@docker
+
   
   gym-api:
     build: ./gym/server
@@ -122,6 +130,10 @@ services:
       - ./config/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik-certs:/letsencrypt
+    networks:
+      default:
+        aliases:
+          - auth.matthias-gym-app.duckdns.org
 
   authelia:
     image: authelia/authelia:4.39.28
@@ -131,7 +143,7 @@ services:
       AUTHELIA_SESSION_SECRET_FILE: /secrets/session_secret
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /secrets/storage_encryption_key
       AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: /secrets/jwt_secret
-      #AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE: /secrets/oidc_hmac_secret
+      AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE: /secrets/oidc_hmac_secret
     volumes:
       - ./config/authelia:/config
       - ./secrets/authelia:/secrets:ro

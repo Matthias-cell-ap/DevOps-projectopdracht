@@ -27,3 +27,39 @@ storage:
 notifier:
   filesystem:
     filename: /data/notification.txt
+
+identity_providers:
+  oidc:
+    jwks:
+      - key: {{ secret "/secrets/private.pem" | mindent 10 "|" | msquote }}
+    claims_policies:
+      schautrack:
+        id_token: ['email', 'email_verified', 'name', 'preferred_username'] 
+    clients:
+      - client_id: 'memos'
+        client_name: 'Memos'
+        client_secret: '$pbkdf2-sha512$310000$IncyZMV2kO9vFS17ou9rSA$my0th6g/DVGvG7VAfNLqC/Z9VS.2iMrWuaNi0xDj2Lh4cjni.3SCNqvLwNXTK4bVgv9YI.yvMkd5wRdMLuuVLg'
+        public: false 
+        authorization_policy: 'one_factor'
+        redirect_uris:
+          - 'https://notes.matthias-gym-app.duckdns.org/auth/callback'
+        scopes: ['openid', 'profile', 'email']
+        response_types: ['code']
+        grant_types: ['authorization_code']
+        access_token_signed_response_alg: 'none'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'client_secret_post'
+      - client_id: 'schautrack'
+        client_name: 'schautrack'
+        claims_policy: 'schautrack'
+        client_secret: '$pbkdf2-sha512$310000$LD5KHyRI8lPy7bvXT7Fd4Q$lCe/40rqnA9jcUjAa4CDLc6WZO/5ig8.TUdowNEyZ.gfxAGfwICrXvC01C55cvwFCDcl.m9YnaLQTSKr.Fe44A'
+        public: false 
+        authorization_policy: 'one_factor'
+        redirect_uris:
+          - 'https://food.matthias-gym-app.duckdns.org/auth/oidc/callback'
+        scopes: ['openid', 'profile', 'email']
+        response_types: ['code']
+        grant_types: ['authorization_code']
+        access_token_signed_response_alg: 'none'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'client_secret_basic'
