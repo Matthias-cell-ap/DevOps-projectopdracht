@@ -75,7 +75,7 @@ services:
     restart: unless-stopped
   
   gym:
-    build: ./gym
+    image: ghcr.io/matthias-cell-ap/gym:main
     restart: unless-stopped
     depends_on:
       gym-db:
@@ -91,7 +91,7 @@ services:
 
   
   gym-api:
-    build: ./gym/server
+    image: ghcr.io/matthias-cell-ap/gym-api:main
     env_file: gym.env
     restart: unless-stopped
     depends_on:

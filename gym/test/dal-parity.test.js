@@ -10,6 +10,7 @@ import { test, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 
 const DB_URL = process.env.TEST_DATABASE_URL
+if (!DB_URL && process.env.CI) throw new Error('TEST_DATABASE_URL is not set: the parity test cannot run')
 const skip = DB_URL ? false : 'set TEST_DATABASE_URL to run this test'
 
 let server, pool, local, remote, db, SCHEMA_VERSION, estimate8RM

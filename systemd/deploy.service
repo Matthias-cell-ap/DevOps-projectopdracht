@@ -1,0 +1,10 @@
+[Unit]
+Description=Nieuwe versie van de gym app ophalen en starten
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/pyfro/devops/projectopdracht
+ExecStart=/usr/bin/docker compose pull gym gym-api
+ExecStart=/usr/bin/docker compose up -d gym gym-api
