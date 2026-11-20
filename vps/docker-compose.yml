@@ -5,3 +5,10 @@ services:
     restart: unless-stopped
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  backup-server:
+    image: restic/rest-server:v0.14.0    # zoek zelf de nieuwste vaste versie op Docker Hub
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - /srv/restic:/data
