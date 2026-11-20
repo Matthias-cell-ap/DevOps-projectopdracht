@@ -1,0 +1,9 @@
+[Unit]
+Description=Backup van mijn selfhosted setup
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/sleep 120
+ExecStart=/home/pyfro/devops/projectopdracht/scripts/backup.sh
