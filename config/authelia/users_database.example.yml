@@ -1,0 +1,5 @@
+users:
+  matthias:
+    displayname: 'Matthias'
+    password: '<hash van: authelia crypto hash generate argon2>'
+    email: 'jij@voorbeeld.be'
