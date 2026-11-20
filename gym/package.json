@@ -10,7 +10,7 @@
     "build:server": "vite build --mode server",
     "preview": "vite preview",
     "android": "npm run build && npx cap sync android && npx cap open android",
-    "test": "node --test \"test/*.test.js\""
+    "test": "node --test --test-concurrency=1 \"test/*.test.js\""
   },
   "keywords": [],
   "author": "",

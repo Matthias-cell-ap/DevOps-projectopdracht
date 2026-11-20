@@ -10,7 +10,9 @@
 // here makes `npm run build:server` fail, so you'll notice.
 //
 // Requests go to /api on the same address the app is served from. The login is checked by
-// the reverse proxy before a request gets there, so there's no login code in here.
+// the reverse proxy before a request gets there, so there's no login code in here. The proxy
+// also tells the server who is logged in, and the server keeps each user's data separate:
+// every Authelia user gets their own gym app.
 import { SEED_EXERCISES } from './seedExercises.js'
 import { SCHEMA_VERSION, defaultSchedule, defaultProfile } from './defaults.js'
 
@@ -27,9 +29,11 @@ async function call(method, path, body) {
     body: body === undefined ? undefined : JSON.stringify(body),
   })
   if (res.status === 401) {
-    // The login expired and the proxy refused the request: reload, so the browser goes
-    // through the login page and comes back
-    if (typeof window !== 'undefined') window.location.reload()
+    // The login expired, or the request reached the server without a user: reload, so the
+    // browser goes through the login page and comes back. At most once per 30 seconds — if
+    // the server keeps saying 401 after that (a proxy misconfiguration), reloading again
+    // would only loop forever.
+    reloadForLogin()
     throw new Error('Not logged in')
   }
   if (!(res.headers.get('content-type') ?? '').includes('application/json')) {
@@ -40,7 +44,18 @@ async function call(method, path, body) {
   return json
 }
 
-// A fresh database is empty: fill it with the same defaults a fresh phone install gets.
+function reloadForLogin() {
+  if (typeof window === 'undefined') return
+  try {
+    const last = Number(window.sessionStorage.getItem('gym-login-reload') ?? 0)
+    if (Date.now() - last < 30_000) return
+    window.sessionStorage.setItem('gym-login-reload', String(Date.now()))
+  } catch { /* storage unavailable: still reload once */ }
+  window.location.reload()
+}
+
+// A new user starts with nothing: fill their data with the same defaults a fresh phone
+// install gets.
 // Runs once per page load, before the first request. The server only fills tables that are
 // still empty, so two tabs doing this at the same time is fine.
 let ready = null

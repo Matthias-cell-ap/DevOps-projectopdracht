@@ -10,6 +10,7 @@ import { test, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 
 const DB_URL = process.env.TEST_DATABASE_URL
+// In een pipeline (GitHub zet CI=true) mag deze test nooit stil overgeslagen worden
 if (!DB_URL && process.env.CI) throw new Error('TEST_DATABASE_URL is not set: the parity test cannot run')
 const skip = DB_URL ? false : 'set TEST_DATABASE_URL to run this test'
 
@@ -32,9 +33,11 @@ before(async () => {
   server = createApp().listen(0)
   const base = `http://localhost:${server.address().port}`
 
-  // dal.api.js calls fetch('/api/...') like a browser would; in Node it needs the full address
+  // dal.api.js calls fetch('/api/...') like a browser would; in Node it needs the full address.
+  // In production the proxy adds the logged-in user as a header; here we do that ourselves.
   const realFetch = globalThis.fetch
-  globalThis.fetch = (url, options) => realFetch(new URL(url, base), options)
+  globalThis.fetch = (url, options = {}) => realFetch(new URL(url, base),
+    { ...options, headers: { ...options.headers, 'Remote-User': 'parity' } })
 
   local = await import('../src/db/dal.js')
   remote = await import('../src/db/dal.api.js')

@@ -25,7 +25,7 @@ endpoints:
       - "[RESPONSE_TIME] < 300"
 
   - name: gym
-    url: "http://gym-api:3000/api/health"
+    url: "http://gym:80/api/health"
     interval: 60s
     conditions:
       - "[STATUS] == 200"

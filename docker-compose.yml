@@ -82,6 +82,7 @@ services:
         condition: service_healthy
     networks:
       - default
+      - gym-db-internal
     labels:
       - traefik.enable=true
       - traefik.http.routers.gym.rule=Host(`gym.matthias-gym-app.duckdns.org`)
@@ -98,7 +99,6 @@ services:
       gym-db:
         condition: service_healthy
     networks:
-      - default 
       - gym-db-internal
   
   gym-db:

@@ -27,6 +27,11 @@ export class HttpError extends Error {
   }
 }
 
+// Every row belongs to one user: the Authelia username of whoever created it.
+// Only simple names are accepted, so a strange header can never become a strange value.
+const USERNAME = /^[A-Za-z0-9._@-]{1,100}$/
+export const isValidUserName = (name) => typeof name === 'string' && USERNAME.test(name)
+
 export function getTable(name) {
   if (!Object.hasOwn(TABLES, name)) throw new HttpError(404, `Unknown table: ${name}`)
   return TABLES[name]

@@ -26,7 +26,8 @@ rest of the app keeps working.
 
 `npm run build:server` builds the same app with `src/db/dal.api.js` in place of `dal.js`:
 the data then lives in PostgreSQL on your own server (`server/`, see `server/README.md`),
-one SQL table per table below, each row stored as JSONB. Backups use the same file format,
+one SQL table per table below, each row stored as JSONB, kept separately for every user
+that logs in through Authelia. Backups use the same file format,
 so a backup exported on the phone can be restored on the server and the other way around.
 
 ## The backup file
