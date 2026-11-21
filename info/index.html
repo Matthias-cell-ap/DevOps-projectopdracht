@@ -11,26 +11,26 @@
 
   <h2>Diensten</h2>
   <ul>
-    <li><a href="https://gym.matthias-gym-app.duckdns.org">gym</a>: mijn persoonlijke gym app, het werkt ook samen met Authelia waardoor iedere gebruiker eigen accounts en data heeft.</li>
+    <li><a href="https://gym.matthias-gym-app.duckdns.org">gym</a>: Mijn persoonlijke gym app, het werkt ook samen met Authelia waardoor iedere gebruiker eigen accounts en data heeft.</li>
     <li><a href="https://notes.matthias-gym-app.duckdns.org">notes</a>: Hier kan je notities maken met memos.</li>
     <li><a href="https://food.matthias-gym-app.duckdns.org">food</a>: Dit is waar je voedingswaarde kan tracken om ze dan in de persoonlijke gym app te zetten.</li>
     <li><a href="https://status.matthias-gym-app.duckdns.org">status</a>: Een status pagina waarin je kan zien of de andere services online zijn</li>
-    <li><a href="https://auth.matthias-gym-app.duckdns.org">auth</a>: Dit is de service dat wordt gebruikt om de andere services logins te geven / te linken aan dit account.</li>
-    <li>info: deze pagina geeft een kort overzicht en is bereikbaar zonder login.</li>
+    <li><a href="https://auth.matthias-gym-app.duckdns.org">auth</a>: Dit is de service die wordt gebruikt om de andere services logins te geven / te linken aan dit account.</li>
+    <li>info: Deze pagina geeft een kort overzicht en is bereikbaar zonder login.</li>
   </ul>
 
   <h2>Beveiliging</h2>
   <ul>
     <li>Poorten 80 en 443 staan open op de VPS en 80 (http) wordt automatisch doorgestuurd naar 443 (https)</li>
-    <li>alles heeft 1 login via Authelia behalve deze pagina.</li>
+    <li>Alles heeft 1 login via Authelia behalve deze pagina.</li>
     <li>Databases zitten op interne netwerken en de persoonlijke app spreekt zijn database aan via een api zodat er niets gelekt kan worden.</li>
     <li>Geen geheimen in git</li>
   </ul>
 
   <h2>Backups</h2>
-  <p>Er wordt iedere nacht een backup gemaakt met restic. het maakt een kopie op zowel de laptop als op de VPS</p>
+  <p>Er wordt iedere nacht een backup gemaakt met restic. Het maakt een kopie op zowel de laptop als op de VPS</p>
 
   <h2>CI/CD</h2>
-  <p>wijzigingen worden doorgestuurd naar GitHub actions waar het eerst nog getest word. Een systemd-timer controleert dan om de 5 minuten of er een nieuwe versie is. Zo ja dan haalt het deze op</p>
+  <p>Wijzigingen worden doorgestuurd naar GitHub actions waar het eerst nog getest wordt. Een systemd-timer controleert dan om de 5 minuten of er een nieuwe versie is. Zo ja dan haalt het deze op</p>
 </body>
 </html>
