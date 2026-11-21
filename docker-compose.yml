@@ -1,13 +1,19 @@
+name: projectopdracht
+
+x-logging: &logging
+  driver: local
+
 services:
   memos:
     image: neosmemo/memos:26.11.1
+    logging: *logging
     restart: unless-stopped
     volumes:
       - ./data/memos:/var/opt/memos
     environment:
       MEMOS_PORT: 5230
       MEMOS_DRIVER: sqlite
-      MEMOS_INSTANCE_URL: http://localhost:5230
+      MEMOS_INSTANCE_URL: https://notes.matthias-gym-app.duckdns.org
     labels:
       - traefik.enable=true
       - traefik.http.routers.notes.rule=Host(`notes.matthias-gym-app.duckdns.org`)
@@ -18,6 +24,7 @@ services:
 
   info:
     image: nginx:1.30.6-alpine
+    logging: *logging
     restart: unless-stopped
     labels:
       - traefik.enable=true
@@ -29,6 +36,7 @@ services:
 
   gatus:
     image: twinproduction/gatus:v5.38.0
+    logging: *logging
     restart: unless-stopped
     volumes:
       - ./config/gatus:/config:ro
@@ -43,6 +51,7 @@ services:
 
   schautrack:
     image: ghcr.io/schaurian/schautrack:2.9.1
+    logging: *logging
     env_file: schautrack.env
     depends_on:
       schautrack-db:
@@ -60,7 +69,8 @@ services:
 
 
   schautrack-db:
-    image: postgres:18-alpine
+    image: postgres:18.7-alpine
+    logging: *logging
     env_file: schautrack.env
     networks:
       - schautrack-db-internal
@@ -76,6 +86,7 @@ services:
   
   gym:
     image: ghcr.io/matthias-cell-ap/gym:main
+    logging: *logging
     restart: unless-stopped
     depends_on:
       gym-db:
@@ -93,6 +104,7 @@ services:
   
   gym-api:
     image: ghcr.io/matthias-cell-ap/gym-api:main
+    logging: *logging
     env_file: gym.env
     restart: unless-stopped
     depends_on:
@@ -102,7 +114,8 @@ services:
       - gym-db-internal
   
   gym-db:
-    image: postgres:18-alpine
+    image: postgres:18.7-alpine
+    logging: *logging
     env_file: gym.env
     networks:
       - gym-db-internal
@@ -118,6 +131,7 @@ services:
 
   traefik:
     image: traefik:v3.7.16
+    logging: *logging
     restart: unless-stopped
     ports:
       - "80:80"
@@ -137,6 +151,7 @@ services:
 
   authelia:
     image: authelia/authelia:4.39.28
+    logging: *logging
     restart: unless-stopped
     environment:
       X_AUTHELIA_CONFIG_FILTERS: template
@@ -145,7 +160,7 @@ services:
       AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: /secrets/jwt_secret
       AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET_FILE: /secrets/oidc_hmac_secret
     volumes:
-      - ./config/authelia:/config
+      - ./config/authelia:/config:ro
       - ./secrets/authelia:/secrets:ro
       - ./data/authelia:/data
     labels:

@@ -8,8 +8,6 @@ on:
       - '.github/workflows/ci.yml'
   pull_request:
     paths:
-      - 'gym/**'
-      - '.github/workflows/ci.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -23,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:18-alpine
+        image: postgres:18.7-alpine
         env:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: gym_test

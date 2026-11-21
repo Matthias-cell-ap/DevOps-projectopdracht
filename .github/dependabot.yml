@@ -4,3 +4,15 @@ updates:
     directory: /
     schedule:
       interval: weekly
+  - package-ecosystem: docker-compose
+    directories: ["/", "/vps"]
+    schedule:
+      interval: weekly
+  - package-ecosystem: docker
+    directories: ["/gym", "/gym/server"]
+    schedule:
+      interval: weekly
+  - package-ecosystem: npm
+    directories: ["/gym", "/gym/server"]
+    schedule:
+      interval: weekly

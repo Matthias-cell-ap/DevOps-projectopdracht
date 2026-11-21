@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+umask 077
 
 PROJECT=/home/pyfro/devops/projectopdracht
 LOCAL_REPO=/backups

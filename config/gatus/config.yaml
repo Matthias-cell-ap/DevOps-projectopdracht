@@ -31,3 +31,10 @@ endpoints:
       - "[STATUS] == 200"
       - "[BODY].status == ok"
       - "[RESPONSE_TIME] < 300"
+  
+  - name: authelia
+    url: "http://authelia:9091/api/health"
+    interval: 60s
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 300"

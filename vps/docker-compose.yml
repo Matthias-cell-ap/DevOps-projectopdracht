@@ -9,6 +9,6 @@ services:
     image: restic/rest-server:0.14.0
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "100.125.246.114:8000:8000"
     volumes:
       - /srv/restic:/data
