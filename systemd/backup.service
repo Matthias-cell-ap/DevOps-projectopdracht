@@ -6,4 +6,4 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 ExecStartPre=/bin/sleep 120
-ExecStart=/home/pyfro/devops/projectopdracht/scripts/backup.sh
+ExecStart="@PROJECT@/scripts/backup.sh"
