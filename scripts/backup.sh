@@ -2,7 +2,8 @@
 set -euo pipefail
 umask 077
 
-PROJECT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)LOCAL_REPO=/backups
+PROJECT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)
+LOCAL_REPO=/backups
 VPS_REPO_FILE=/root/.restic-vps-repo
 export RESTIC_PASSWORD_FILE=/root/.restic-password
 DUMPS="$PROJECT/backup-dumps"
