@@ -130,7 +130,7 @@ services:
     restart: unless-stopped
 
   traefik:
-    image: traefik:v3.7.16
+    image: traefik:v3.8.0
     logging: *logging
     restart: unless-stopped
     ports:
